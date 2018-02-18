@@ -1,0 +1,14 @@
+{
+  "name": "tg-bot-questionnaire",
+  "version": "0.0.1",
+  "description": "Бот, который задает слишком много вопросов",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Just Fry",
+  "license": "ISC",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.30.0"
+  }
+}
