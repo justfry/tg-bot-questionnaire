@@ -40,7 +40,6 @@ bot.on('text', (msg) => {
             questionList = questions.find(el => { //находим нужный нам список вопросов
                 return el.name == user.quest
             }).questionList 
-
             currentQuestion = user.ans.length //на каком вопросе сейчас находится пользователь
             if (currentQuestion < questionList.length){
                 text = questionList[currentQuestion].main + "\n" + questionList[currentQuestion].extend //склеиваем вопрос с пояснением
@@ -79,13 +78,9 @@ function getMarkup(markupButtons){
 }
 
 function getUser(chatID){ //если пользователь уже есть в состояниях, то возвращаем его данные, если нет, то чо тут сделаешь, false
-   for (i = 0; i < state.length; i++){
-       if (chatID == state[i].id){
-           return state[i]
-       } else {
-           return false
-       }
-   }
+   return state.find(el => {
+       return el.id == chatID
+   }) 
 }
 
 function addAnswer(user, numQuestion, answer){
