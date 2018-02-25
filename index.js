@@ -42,6 +42,9 @@ bot.on('callback_query', (query) => {
         question = questionList.find(el => {
             return el.main == query.message.text
         })
+        position = questionList.findIndex (el => {
+            return el.main == query.message.text
+        })
         if (query.data.includes("◽")){ //Если есть квадратит, то это чекбокс
             text = query.data.replace("◽", "") 
             checkbox = user.checkbox //сократим обращение
@@ -57,14 +60,11 @@ bot.on('callback_query', (query) => {
 
         } else if (query.data == "send"){ //а если пользователь нажал "отправить", то сгружаем все выбранные кнопки в ответы
             text = user.checkbox.join(', ') // склеиваем массив в строку
-            position = questionList.findIndex (el => {
-                return el.main == query.message.text
-            })
             addAnswer(user, text, position)
             user.checkbox = []
             user.mode == 'edit'? endOfQuestions(user) : askQuestion(user, user.ans.length) 
         } else {
-            addAnswer(user, query.data)
+            addAnswer(user, query.data, position)
             user.mode == 'edit'? endOfQuestions(user) : askQuestion(user, user.ans.length) 
         } 
     }
@@ -175,7 +175,7 @@ function endOfQuestions(user){
     ], true)
     questionList = getQuestionList(user)
     text = user.ans.reduce((text, el, i) => {
-        return text + ("<strong>" + i + 1 + ". " + questionList[i].main + "</strong>\n     " + el.length > 53? (el.substr(0,50) + "...") : el + '\n') //Телеграм не любит табуляцию, поэтому 5 пробелов
+        return text + ("<strong>" + (i + 1) + ". " + questionList[i].main + "</strong>\n     " + el + '\n') //Телеграм не любит табуляцию, поэтому 5 пробелов
     }, "") //вообще, изучите reduce, офигенная штука
     bot.sendMessage(user.id, text, {parse_mode: "HTML", reply_markup: keyboard})
     user.edit = -1
