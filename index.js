@@ -140,7 +140,6 @@ function addAnswer(user, answer, numQuestion){
 function askQuestion(user, numQuestion){
     questionList = getQuestionList(user)
     question = questionList[numQuestion]
-
     if (question.type == 'text'){
         text = question.main + "\n" + question.extend //склеиваем вопрос с пояснением  
         bot.sendMessage(user.id, text)
@@ -176,7 +175,7 @@ function endOfQuestions(user){
     ], true)
     questionList = getQuestionList(user)
     text = user.ans.reduce((text, el, i) => {
-        return text + ( i + 1 + ". <strong>" + questionList[i].main + "</strong>\n     " + el.length > 53? (el.substr(0,50) + "...") : el + '\n') //Телеграм не любит табуляцию, поэтому 5 пробелов
+        return text + ("<strong>" + i + 1 + ". " + questionList[i].main + "</strong>\n     " + el.length > 53? (el.substr(0,50) + "...") : el + '\n') //Телеграм не любит табуляцию, поэтому 5 пробелов
     }, "") //вообще, изучите reduce, офигенная штука
     bot.sendMessage(user.id, text, {parse_mode: "HTML", reply_markup: keyboard})
     user.edit = -1
