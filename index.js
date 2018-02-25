@@ -19,6 +19,7 @@ bot.on('callback_query', (query) => {
     if (query.data == 'beginning'){
         bot.answerCallbackQuery(query.id)
         initializeUser(query.message.chat.id)
+        user = getUser(query.message.chat.id)
         user.mode = "work"
         questionnaries = questions.map(el => {
             return([el.name])
