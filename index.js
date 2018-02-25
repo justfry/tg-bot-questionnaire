@@ -140,20 +140,19 @@ function addAnswer(user, answer, numQuestion){
 function askQuestion(user, numQuestion){
     questionList = getQuestionList(user)
     question = questionList[numQuestion]
-    text = "Вопрос " + numQuestion + " из " + questionList.length + "\n"
 
     if (question.type == 'text'){
-        text += question.main + "\n" + question.extend //склеиваем вопрос с пояснением  
+        text = question.main + "\n" + question.extend //склеиваем вопрос с пояснением  
         bot.sendMessage(user.id, text)
     } else if (question.type == 'buttons'){
-        text += question.main
+        text = question.main
         buttons = question.extend.map(el => {
             return {text: el, callback_data: el}
         })
         keyboard = getKeyboard(buttons)
         bot.sendMessage(user.id, text, {reply_markup: keyboard})
     } else if (question.type == 'checkbox'){
-        text += question.main
+        text = question.main
         buttons = question.extend.map(el => {
             return {text: "◽" + el, callback_data: "◽" + el}
         })
