@@ -1,6 +1,7 @@
 const telegram = require('node-telegram-bot-api')
 const token = require('./token')
 const questions = require('./questions')
+const endSubmission = require('./endSubmission')
 
 let bot = new telegram(token, {polling: true})
 
@@ -17,9 +18,8 @@ bot.onText(/\/start/, (msg) => {
 bot.on('callback_query', (query) => {
     if (query.data == 'beginning'){
         bot.answerCallbackQuery(query.id)
-
-        state.push({"id": query.message.chat.id, "ans": [], "mode": "work", "quest": "", "checkbox": [], "edit": -1})
-        
+        initializeUser(query.message.chat.id)
+        user.mode = "work"
         questionnaries = questions.map(el => {
             return([el.name])
         })
@@ -31,7 +31,10 @@ bot.on('callback_query', (query) => {
         bot.sendMessage(query.message.chat.id, "Пожалуйста, введите номер вопроса.")
 
     } else if (query.data == 'end'){
-
+        user = getUser(query.message.chat.id)
+        questionList = getQuestionList(user)
+        endSubmission(user, questionList, bot)
+        initializeUser(query.message.chat.id)
     } else {
         user = getUser(query.message.chat.id)
         questionList = getQuestionList(user)//пригодится для обновления сообщений
@@ -173,6 +176,18 @@ function endOfQuestions(user){
         return text + ( i + 1 + ". " + questionList[i].main + "\n     " + el.substr(0,50) + '\n') //Телеграм не любит табуляцию, поэтому 5 пробелов
     }, "") //вообще, изучите reduce, офигенная штука
     bot.sendMessage(user.id, text, {reply_markup: keyboard})
-    user.mode = "stopped"
     user.edit = -1
+}
+
+function initializeUser (id){
+    user = getUser(id)
+    if (user){
+        user.ans = []
+        user.mode = ""
+        user.quest = ""
+        user.checkbox = []
+        user.edit = -1
+    } else {
+        state.push({"id": id, "ans": [], "mode": "", "quest": "", "checkbox": [], "edit": -1})
+    }
 }
