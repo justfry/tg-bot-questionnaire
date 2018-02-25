@@ -18,7 +18,7 @@ bot.on('callback_query', (query) => {
     if (query.data == 'beginning'){
         bot.answerCallbackQuery(query.id)
 
-        state.push({"id": query.message.chat.id, "ans": [], "mode": "work", "quest": "", "checkbox": []} )
+        state.push({"id": query.message.chat.id, "ans": [], "mode": "work", "quest": "", "checkbox": [], "edit": -1})
         
         questionnaries = questions.map(el => {
             return([el.name])
@@ -26,6 +26,9 @@ bot.on('callback_query', (query) => {
 
         bot.sendMessage(query.message.chat.id, 'Анкеты:', getMarkup(questionnaries))
     } else if (query.data == 'edit'){
+        user = getUser(query.message.chat.id)
+        user.mode = 'edit'
+        bot.sendMessage(query.message.chat.id, "Пожалуйста, введите номер вопроса.")
 
     } else if (query.data == 'end'){
 
@@ -54,10 +57,11 @@ bot.on('callback_query', (query) => {
                 return el.main == query.message.text
             })
             addAnswer(user, text, position)
-            askQuestion(user, user.ans.length)
+            user.checkbox = []
+            user.mode == 'edit'? endOfQuestions(user) : askQuestion(user, user.ans.length) 
         } else {
             addAnswer(user, query.data)
-            askQuestion(user, user.ans.length)
+            user.mode == 'edit'? endOfQuestions(user) : askQuestion(user, user.ans.length) 
         } 
     }
 })
@@ -79,6 +83,15 @@ bot.on('text', (msg) => {
                 endOfQuestions(user)
             }
             
+        } else if (user.mode == "edit"){
+            if (user.edit == -1){
+                user.edit = msg.text - 1
+                askQuestion(user, user.edit)
+            } else {
+                addAnswer(user, msg.text, user.edit)
+                endOfQuestions(user)
+                user.edit = -1
+            }
         }
         
     }
@@ -161,4 +174,5 @@ function endOfQuestions(user){
     }, "") //вообще, изучите reduce, офигенная штука
     bot.sendMessage(user.id, text, {reply_markup: keyboard})
     user.mode = "stopped"
+    user.edit = -1
 }
