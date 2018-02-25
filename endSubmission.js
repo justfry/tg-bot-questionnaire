@@ -58,7 +58,7 @@ function getDocDefinition(user, questionList){
         },
         content: [{
 			image: 'img/logo.png',
-			width: 100,
+			width: 90,
 			alignment: 'center'
         },
         {

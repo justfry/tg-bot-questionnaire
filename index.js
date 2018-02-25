@@ -138,19 +138,22 @@ function addAnswer(user, answer, numQuestion){
 }
 
 function askQuestion(user, numQuestion){
-    question = getQuestionList(user)[numQuestion]
-    if (questionList[numQuestion].type == 'text'){
-        text = question.main + "\n" + question.extend //склеиваем вопрос с пояснением  
+    questionList = getQuestionList(user)
+    question = questionList[numQuestion]
+    text = "Вопрос " + numQuestion + " из " + questionList.length + "\n"
+
+    if (question.type == 'text'){
+        text += question.main + "\n" + question.extend //склеиваем вопрос с пояснением  
         bot.sendMessage(user.id, text)
     } else if (question.type == 'buttons'){
-        text = question.main
+        text += question.main
         buttons = question.extend.map(el => {
             return {text: el, callback_data: el}
         })
         keyboard = getKeyboard(buttons)
         bot.sendMessage(user.id, text, {reply_markup: keyboard})
     } else if (question.type == 'checkbox'){
-        text = question.main
+        text += question.main
         buttons = question.extend.map(el => {
             return {text: "◽" + el, callback_data: "◽" + el}
         })
@@ -174,9 +177,9 @@ function endOfQuestions(user){
     ], true)
     questionList = getQuestionList(user)
     text = user.ans.reduce((text, el, i) => {
-        return text + ( i + 1 + ". " + questionList[i].main + "\n     " + el.substr(0,50) + '\n') //Телеграм не любит табуляцию, поэтому 5 пробелов
+        return text + ( i + 1 + ". <strong>" + questionList[i].main + "</strong>\n     " + el.length > 53? (el.substr(0,50) + "...") : el + '\n') //Телеграм не любит табуляцию, поэтому 5 пробелов
     }, "") //вообще, изучите reduce, офигенная штука
-    bot.sendMessage(user.id, text, {reply_markup: keyboard})
+    bot.sendMessage(user.id, text, {parse_mode: "HTML", reply_markup: keyboard})
     user.edit = -1
 }
 
