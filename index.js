@@ -35,7 +35,7 @@ bot.on('callback_query', (query) => {
         user = getUser(query.message.chat.id)
         questionList = getQuestionList(user)
         endSubmission(user, questionList, bot)
-        initializeUser(query.message.chat.id)
+       // initializeUser(query.message.chat.id)
     } else {
         user = getUser(query.message.chat.id)
         questionList = getQuestionList(user)//пригодится для обновления сообщений
