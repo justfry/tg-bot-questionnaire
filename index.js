@@ -19,8 +19,9 @@ bot.on('message', (msg) => {
 })
 
 bot.on('callback_query', (query) => {
+    bot.answerCallbackQuery(query.id)
     if (query.data == 'beginning'){
-        bot.answerCallbackQuery(query.id)
+        
         initializeUser(query.message.chat.id)
         user = getUser(query.message.chat.id)
         user.mode = "work"
@@ -35,8 +36,9 @@ bot.on('callback_query', (query) => {
         bot.sendMessage(query.message.chat.id, "Пожалуйста, введите номер вопроса.")
 
     } else if (query.data == 'end'){
-        user = getUser(query.message.chat.id)
-        questionList = getQuestionList(user)
+        user = getUser(query.message.chat.id, (user) => {
+            questionList = getQuestionList(user)
+        })
         endSubmission(user, questionList, bot)
         initializeUser(query.message.chat.id)
     } else {
