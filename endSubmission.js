@@ -109,6 +109,8 @@ function getBodyTable(user, questionList){
 }
 
 function sendFile(user, fileName, bot){
-    fs.createReadStream("./output/" + fileName) 
-    bot.sendDocument(user.id, "./output/" + fileName)
+    //stream = fs.createReadStream("./output/" + fileName)
+    bot.sendDocument(user.id, "./output/" + fileName).then(() => {
+        fs.unlinkSync("./output/" + fileName)
+    })
 }

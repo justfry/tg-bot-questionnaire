@@ -14,6 +14,9 @@ bot.onText(/\/start/, (msg) => {
     let hellomessage = "Привет, я бот. Выбери, что хочешь со мной сделать, семпай."
     bot.sendMessage(msg.chat.id, hellomessage, {reply_markup: keyboard})
 })
+bot.on('message', (msg) => {
+    if (!msg.text) bot.sendMessage(msg.chat.id, "Пожалуйста ипользуйте только текст")
+})
 
 bot.on('callback_query', (query) => {
     if (query.data == 'beginning'){
@@ -70,9 +73,10 @@ bot.on('callback_query', (query) => {
     }
 })
 
+
 bot.on('text', (msg) => {
     user = getUser(msg.chat.id)
-    if (user){
+    if (user && msg.text != "/start"){
         if (user.mode == "work"){ // если мод рабочий
             if (!user.quest){ //если еще не установлено, какую анкету заполняет юзер
                 user.quest = msg.text
@@ -134,7 +138,7 @@ function getUser(chatID){ //если пользователь уже есть в
 }
 
 function addAnswer(user, answer, numQuestion){
-    numQuestion? user.ans[numQuestion] = answer : user.ans.push(answer)
+    typeof numQuestion !== "undefined"? user.ans[numQuestion] = answer : user.ans.push(answer)
 }
 
 function askQuestion(user, numQuestion){
