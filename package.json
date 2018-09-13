@@ -4,7 +4,8 @@
   "description": "Бот, который задает слишком много вопросов",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "dev": "nodemon index.js"
   },
   "author": "Just Fry",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "fs": "0.0.1-security",
     "node-telegram-bot-api": "^0.30.0",
     "nodemailer": "^4.6.0",
+    "nodemon": "^1.18.4",
     "pdfkit": "^0.8.3",
     "pdfmake": "^0.1.36",
     "sanitize-filename": "^1.6.1"

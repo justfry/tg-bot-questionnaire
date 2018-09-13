@@ -21,21 +21,18 @@ const fonts = {
     }
 }
 const pdfPrinter = new pdfmake(fonts)
-module.exports = endSubmission
 
-function endSubmission(user, questionList, bot){
+const endSubmission = (user, questionList, bot) => {
     fileName = getFileName(user)
     makePDF(user, fileName, questionList, bot)
 }
 
-function getFileName(user){
+const getFileName = (user) => {
     date = new Date()
     return sanitize(user.id + '_' + user.quest + '_' + dateformat(date, 'dd.mm (HH-MM)') + '.pdf')
 }
 
-
-
-function makePDF(user, filename, questionList, bot){
+const makePDF = (user, filename, questionList, bot) => {
     stream = fs.createWriteStream("./output/" + fileName)
     docDefinition = getDocDefinition(user, questionList)
     pdfDoc = pdfPrinter.createPdfKitDocument(docDefinition)
@@ -46,7 +43,7 @@ function makePDF(user, filename, questionList, bot){
     })
 }
 
-function getDocDefinition(user, questionList){
+const getDocDefinition = (user, questionList) => {
     return {
         footer: function(currentPage, pageCount) { return {
             text : "СТРАНИЦА:    " + currentPage.toString(),
@@ -101,16 +98,18 @@ function getDocDefinition(user, questionList){
     }
 }
 
-function getBodyTable(user, questionList){
+const getBodyTable = (user, questionList) => {
     return user.ans.map((el,i) => {
         question = questionList[i]
         return  [[{text:question.main, bold: true}, question.type == 'text'? question.extend : ""], user.ans[i]]
     })
 }
 
-function sendFile(user, fileName, bot){
+const sendFile = (user, fileName, bot) => {
     //stream = fs.createReadStream("./output/" + fileName)
     bot.sendDocument(user.id, "./output/" + fileName).then(() => {
         fs.unlinkSync("./output/" + fileName)
     })
 }
+
+module.exports = endSubmission
