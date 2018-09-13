@@ -1,4 +1,2 @@
 # tg-bot-questionnaire
-Бот анкетирования для Телеграма NodeJS
-
-Тестировать: t.me/justfry_bot
+Bot for telegram, which generates pdf with user answers to questions. It could be used for getting feedback of product or to make social researches. 
